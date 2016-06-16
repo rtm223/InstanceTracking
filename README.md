@@ -56,3 +56,4 @@ Simple and fast tracking and iteration of c++ object instances.
   * Use of static `begin()` and `end()` functions in `RTM::Instance::List` causes a warning in Visual Studio with warning level of /W4 or higher. See https://connect.microsoft.com/VisualStudio/feedback/details/1322808/warning-w4-with-compiler-generated-local-variable
   * List manipulation is unnecessarily implemented in templated functions, causing code bloat if you need to track multiple classes.
   * Facility for deleting instances during iteration has slightly clumsy syntax.
+  * Copies of tracked objects are not tracked automatically.
