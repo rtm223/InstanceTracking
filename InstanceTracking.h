@@ -1,9 +1,5 @@
 // Copyright (C) Richard Meredith 2016
 // Licensed under the MIT License https://opensource.org/licenses/MIT
-//
-// $Id: //depot/Utilities/C++/ObjectInstanceTracker/ObjectInstanceTracker/Source/InstanceTracking.h#9 $
-// $DateTime: 2016/06/15 22:30:33 $ 
-// $Change: 104 $
 
 #pragma once
 
@@ -12,6 +8,7 @@
 #if defined(INST_TRACKING_USING_STD_MUTEX)
 #include <mutex>
 #endif
+#include <assert.h>
 
 namespace RTM
 {
@@ -30,6 +27,8 @@ template<typename T>
 struct Tracker
 {
 	Tracker(T* instance = nullptr);
+	Tracker(const Tracker<T>& other);
+
 	~Tracker() {EndTracking();}
 
 	bool BeginTracking(T* instance) {return !TrackedInstance && List<T>::Add(this, instance);}
@@ -53,9 +52,19 @@ Tracker<T>::Tracker(T* instance)
 	, Prev(nullptr)
 	, Next(nullptr)
 {
-	BeginTracking(instance);
+	if(instance)
+		BeginTracking(instance);
 }
 
+template<typename T>
+Tracker<T>::Tracker(const Tracker<T>& other)
+	: TrackedInstance(nullptr)
+	, Prev(nullptr)
+	, Next(nullptr)
+{
+	// copying tracked nodes is not implemented automatically
+	assert(!other.TrackedInstance);
+}
 
 ////////////////////////////////////////////////////////////////////////////
 // List - Presents a container-like interface to the application
